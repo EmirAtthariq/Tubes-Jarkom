@@ -4,7 +4,14 @@ import os
 
 def handle_client(connection_socket, client_address):
     try:
-        request = connection_socket.recv(1024).decode()
+        request = b""
+        while True:
+            data = connection_socket.recv(4096)
+            if not data:
+                break
+            request += data
+        
+        request = request.decode()
         print(f"[REQUEST from {client_address}]:\n{request}")
         
         # Menghapus "/" dari nama file
